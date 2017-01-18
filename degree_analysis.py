@@ -9,7 +9,7 @@ Created on Mon Jan 16 19:21:17 2017
 #03_Info_Molecules.xlsx파일의 drug-likenss 컬럼명이 제대로 인식이 안되는 관계로  엑셀파일상에서 drug_likeness로 수정.
 #34_Molecules_Targets_Relationships의 MOL ID 컬럼명 제대로 인식되도록 MOL_ID로 바꿈.
 import os
-os.chdir('/Users/Chang-Eop/Dropbox/가천대 Neural Network & Systems Medicine Lab/프로젝트/이원융_네트워크약리학리뷰/TCMSP_data')
+os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm')
 
 import numpy as np
 import pandas as pd
