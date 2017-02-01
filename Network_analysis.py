@@ -50,12 +50,23 @@ for i in herbs_unique:
              G.add_edge(j,k)
     All_herbs_CT['herb_ID_'+ str(i)] = G
     
-    
+#관심 처방의 본초 리스트
+Formulae_list = ['herb_ID_4', 'herb_ID_23', 'herb_ID_221', 'herb_ID_273']
 
+#관심 처방의 본초별 그래프 merge
+Formulae_merged = All_herbs_CT[Formulae_list[0]]
+for i in range(len(Formulae_list)):
+    Formulae_merged = nx.compose(Formulae_merged, All_herbs_CT[Formulae_list[i]])
     
-    
-    
-    
+#node type에 따라 색깔 지정 list 생성
+nodes_color = Formulae_merged.nodes()
+for i in range(len(nodes_color)):
+    if nodes_color[i][0:3] == 'MOL':
+        nodes_color[i] = 'r'
+    else:
+        nodes_color[i] = 'b'
+            
+nx.draw_networkx(Formulae_merged,with_labels=True, node_color = nodes_color)
     
 
 
