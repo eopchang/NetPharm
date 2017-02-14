@@ -11,7 +11,7 @@ os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm')
 import numpy as np
 import pandas as pd
 import networkx as nx
-import pylab
+import pylab, copy
 
 ob_th = 30
 dl_th = 0.18
@@ -104,7 +104,7 @@ for i in Targets:
         Targets = [x for x in Targets if x != i] #remove로 지우면 같은 분자 2개 이상일 경우 첫번째만 지우므로
 
 
-#########################특정 Targets 미리 구성했다면 여기서부터#######
+#########################특정 Targets 미리 구성했다면 여기서부터#######(disease 함수는 필요)
 #T-D network construction
 G = nx.Graph()
 G.add_nodes_from(Targets) #Targets: list
@@ -170,3 +170,12 @@ for i in TD_network_int.edges():
         
 DT_table_frame = pd.DataFrame(list(DT_table.items()))
 DT_table_frame.to_csv('DT_table') #value에 list 구조때문에 excel로는 저장이 안됨.
+
+#질환별 degree 조사
+for i, j in enumerate(DT_table.values()):
+    print(len(j), list(DT_table.keys())[i])
+    
+#TD_network_2: disease node 중에 degree > 1만 남김.     
+TD_network_2 = copy.deepcopy(TD_network) #다른 주소에 새로 할당하기 위해(list가 아니라 [:] 쓸수 없음.)
+TD_network_2.remove_nodes_from(dels for dels in TD_network_2.nodes() if dels[0] == 'D' and TD_network_2.degree(dels) <2)
+TD_network_2.remove_nodes_from(dels for dels in TD_network_2.nodes() if dels[0] == 'T' and TD_network_2.degree(dels)  < 1)
