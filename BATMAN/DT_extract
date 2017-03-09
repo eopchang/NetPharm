@@ -1,0 +1,49 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Thu Mar  9 20:26:05 2017
+
+@author: Chang-Eop
+"""
+
+import os
+os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm/BATMAN')
+
+import re
+import math
+import numpy as np
+import pandas as pd
+
+
+file = pd.read_excel('rawfile_BATMAN drug-target interaction info.xlsx')
+
+
+#pubchem_CID에서 'continued' 붙은 부분 다 제거
+p = re.compile('[\d]') #모든 숫자 
+for i in range(np.shape(file)[0]): 
+    m = p.findall(str(file.Pubchem_CID[i]))
+    file.Pubchem_CID[i] = "".join(m)
+   
+#target gene의 이름만 따내기(id, score 사이에 있는)
+p = re.compile('\|.+\(') #|와 ( 사이에 있는 문자 인식하고 |,(포함하여 추출 
+file_np = np.array(file) #np array로 변환하여 작업
+for i in range(2, np.shape(file)[0]):
+    for j in range(1,np.shape(file)[1]):
+        m = p.findall(str(np.array(file)[i,j])) #nan위해 str로 바꿈. nan일때 패턴 없으므로 m=[]
+        if len(m) > 0:
+            file_np[i,j] = m[0][1:-1]
+        else:
+            pass
+#file = pd.DataFrame(file_np) #다시 DataFrame 구조로
+        
+from collections import defaultdict 
+DT =  defaultdict(list) #value가 기본적으로 list
+for i in range(2, np.shape(file_np)[0]):
+    for j in range(1, np.shape(file_np)[1]):
+        if str(file_np[i,j]) == 'nan':
+            pass
+        else:
+            DT[file_np[i,0]].append(file_np[i,j])
+            
+        
+        
