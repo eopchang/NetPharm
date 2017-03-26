@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Mar 14 11:00:21 2017
+
+@author: Chang-Eop
+"""
+
+import os
+os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm')
+
+
+import pandas as pd
+import networkx as nx
+import itertools
+
+lists = pd.read_excel('NetPharm_lists.xlsx', sheetname=4)
+
+G  = nx.Graph()
+for i in lists.Author:
+    auth = i.split(",")
+    for j in itertools.combinations(auth,2):
+        G.add_edge(*j)
+    
+G_nodes_frame = pd.DataFrame(G.nodes())
+G_nodes_frame.to_excel('authors_list.xlsx') 
+   
+G_dic_frame = pd.DataFrame(G.edges())
+G_dic_frame.to_excel('author_network.xlsx') 
+    
+    
