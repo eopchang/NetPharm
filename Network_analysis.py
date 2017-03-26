@@ -17,7 +17,7 @@ ob_th = 30
 dl_th = 0.18
 
 #관심 처방의 본초 리스트
-Formulae_list = ['herb_ID_4', 'herb_ID_23', 'herb_ID_221', 'herb_ID_273']
+Formulae_list = ['herb_ID_336']
 
 H_name = pd.read_excel('02_Info_Herbs_Name.xlsx')
 M_info = pd.read_excel('03_Info_Molecules.xlsx')
@@ -88,6 +88,19 @@ for i, v in pos.items():
 nx.draw_networkx(Formulae_merged, pos, with_labels=False, node_color = nodes_color)   
 nx.draw_networkx_labels(Formulae_merged, pos_labels)
 
+CT_nodes = []
+for i in Formulae_merged.nodes():
+    if i[0] == 'T':
+        ts = list(T_info[T_info['TAR_ID'] == i]['target_name'])
+        CT_nodes.append(ts)
+    else:
+        ms = list(M_info[M_info['MOL_ID'] == i]['molecule_name'])
+        CT_nodes.append(ms)
+    
+CT_index = pd.DataFrame(Formulae_merged.nodes())
+CT_index[1] = CT_nodes
+CT_index.to_excel('CT_index_ginseng.xlsx')
+
 
 ##T-D network construction & visualize
 #target 인수로 받아 해당 disease(list 구조) 출력하는 함수 정의.
@@ -137,14 +150,18 @@ pos_labels = {}
 y_off = 0 #상황에 맞게 조정
 for i, v in pos.items():
     pos_labels[i] = (v[0], v[1]+y_off)
-    
-nx.draw_networkx(TD_network_int,pos, with_labels=False, node_color = nodes_color2)   
+
+# int로 바꾸면서 networkx가 node 순서 마음대로 바꿔버리므로 그 순서에 맞게 node color도 재배열해야 함. 
+nodes_color_rearanged = np.array(nodes_color2)[np.array(TD_network_int.nodes())]
+
+nx.draw_networkx(TD_network_int,pos, with_labels=False, node_color = nodes_color_rearanged)   
 nx.draw_networkx_labels(TD_network_int,pos_labels, font_size = 8)
 
 
 #T: int형으로 바뀐 node 들의 실제 이름 
 isD = [i[0] == 'D' for i in TD_network.nodes()] #node가 disease인지(target인지) 여부
 T = TD_network_int.nodes()
+T.sort() #int로 바꾸면서 노드 순서 뒤바꼈으므로 다시 배열하여 노드 리스트 작성하고자 함.
 for i in T:
     if isD[i]: 
         T[i] = list(D_info[D_info['DIS_ID'] == TD_network.nodes()[i]]['disease_name'])
@@ -154,7 +171,7 @@ for i in T:
 T = pd.DataFrame(T)
 
 # int로 라벨링 된 노드들의 실제 이름 엑셀파일로 저장
-T.to_excel('TD_index.xlsx')
+T.to_excel('TD_index_ginseng.xlsx')
 
 from collections import defaultdict
 DT_table =  defaultdict(list)#Disease와 해당 Target 들 테이블로 정리
@@ -169,7 +186,7 @@ for i in TD_network_int.edges():
         DT_table[DisName].append(TarName)
         
 DT_table_frame = pd.DataFrame(list(DT_table.items()))
-DT_table_frame.to_csv('DT_table') #value에 list 구조때문에 excel로는 저장이 안됨.
+DT_table_frame.to_csv('DT_table_ginseng') #value에 list 구조때문에 excel로는 저장이 안됨.
 
 #질환별 degree 조사
 for i, j in enumerate(DT_table.values()):
