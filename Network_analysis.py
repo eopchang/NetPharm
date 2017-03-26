@@ -58,20 +58,32 @@ for i in herbs_unique:
 
     
 
-##C-T network construction & visualize##    
+##C-T network construction & visualize## 
+#Formulae_merged: graph 구조의 CT_netwowrk. 'node type'을 attribute로 갖음.
 #관심 처방의 본초별 그래프 merge
 Formulae_merged = All_herbs_CT[Formulae_list[0]]
 for i in range(len(Formulae_list)):
     Formulae_merged = nx.compose(Formulae_merged, All_herbs_CT[Formulae_list[i]])
     
 
-#node type에 따라 색깔 지정 list 생성
-nodes_color = Formulae_merged.nodes()
-for i in range(len(nodes_color)):
-    if nodes_color[i][0] == 'M':
+
+
+#node type에 따라 색깔 지정 list 생성 & nodes type에 따라 node attribute 생성
+nodes = Formulae_merged.nodes() #for indexing
+nodes_color = Formulae_merged.nodes() #for color
+a = dict.fromkeys(Formulae_merged.nodes()) #for attribute
+
+for i in range(len(nodes)):
+    if nodes[i][0] == 'M':
+        a[nodes[i]] = 'Mol'
         nodes_color[i] = 'r'
+        
     else:
+        a[nodes[i]] = 'Tar'
         nodes_color[i] = 'c'
+        
+#CT_network에 'node type'attribute 부여
+nx.set_node_attributes(Formulae_merged, 'node type', a)
 
 ##visualize        
 pylab.figure()  
