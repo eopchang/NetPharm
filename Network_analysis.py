@@ -21,6 +21,7 @@ dl_th = 0.18 #drug-likeness(default = 0.18)
 title_CT_index = 'CT_index_Manhyungza.xlsx'
 title_TD_index = 'TD_Manhyungza.xlsx'
 title_DT_table = 'DT_table_Manhyungza.xlsx'
+title_CT_degrees = 'CT_degrees.xlsx'
 
 #관심 처방의 본초 리스트
 Formulae_list = ['herb_ID_274']
@@ -119,8 +120,29 @@ CT_index = pd.DataFrame(Formulae_merged.nodes())
 CT_index[1] = CT_nodes
 CT_index.to_excel(title_CT_index)
 
+
+
 CT_network = Formulae_merged
 
+#CT_network의 degree 정보 추출
+# DataFrame 구조에서 ndarray구조 변환후 작업하고 다시 DataFrame으로 comeback(걍 그게 편해서)
+CT_degrees_items = CT_network.degree().items()
+CT_degrees_pd = pd.DataFrame(list(CT_degrees_items))
+CT_degrees_np = np.array(CT_degrees_pd)
+
+for i in CT_degrees_np[:,0]:
+    if i[0] == 'M':
+        CT_degrees_np[CT_degrees_np[:,0]==i,0] = list(M_info[M_info.MOL_ID == i].molecule_name)
+    else:
+        CT_degrees_np[CT_degrees_np[:,0]==i,0] = list(T_info[T_info.TAR_ID == i].target_name)
+
+CT_degrees_pd = pd.DataFrame(CT_degrees_np, columns = ['Node', 'Degree'])
+
+#degree descending 순으로 배열
+CT_degrees_pd = CT_degrees_pd.sort_index(by = 'Degree', ascending=False)
+
+#CT_degree 정보 excel로 저장
+CT_degrees_pd.to_excel(title_CT_degrees)
 
 ##T-D network construction & visualize
 #target 인수로 받아 해당 disease(list 구조) 출력하는 함수 정의.
