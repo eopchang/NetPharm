@@ -4,7 +4,8 @@ Created on Wed Jan 18 17:04:01 2017
 
 @author: Chang-Eop
 """
-
+#CT_network 그래프 객체는 CT_network
+#TD_network 그래프 객체는 TD_network
 import os
 os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm')
 
@@ -13,11 +14,16 @@ import pandas as pd
 import networkx as nx
 import pylab, copy
 
-ob_th = 30
-dl_th = 0.18
+#Compound filtering threshold 설정 
+ob_th = 30 #Oral bioavility(default = 30)
+dl_th = 0.18 #drug-likeness(default = 0.18)
+
+title_CT_index = 'CT_index_Manhyungza.xlsx'
+title_TD_index = 'TD_Manhyungza.xlsx'
+title_DT_table = 'DT_table_Manhyungza.xlsx'
 
 #관심 처방의 본초 리스트
-Formulae_list = ['herb_ID_336']
+Formulae_list = ['herb_ID_274']
 
 H_name = pd.read_excel('02_Info_Herbs_Name.xlsx')
 M_info = pd.read_excel('03_Info_Molecules.xlsx')
@@ -111,7 +117,9 @@ for i in Formulae_merged.nodes():
     
 CT_index = pd.DataFrame(Formulae_merged.nodes())
 CT_index[1] = CT_nodes
-CT_index.to_excel('CT_index_ginseng.xlsx')
+CT_index.to_excel(title_CT_index)
+
+CT_network = Formulae_merged
 
 
 ##T-D network construction & visualize
@@ -183,7 +191,7 @@ for i in T:
 T = pd.DataFrame(T)
 
 # int로 라벨링 된 노드들의 실제 이름 엑셀파일로 저장
-T.to_excel('TD_index_ginseng.xlsx')
+T.to_excel(title_TD_index)
 
 from collections import defaultdict
 DT_table =  defaultdict(list)#Disease와 해당 Target 들 테이블로 정리
@@ -198,7 +206,7 @@ for i in TD_network_int.edges():
         DT_table[DisName].append(TarName)
         
 DT_table_frame = pd.DataFrame(list(DT_table.items()))
-DT_table_frame.to_csv('DT_table_ginseng') #value에 list 구조때문에 excel로는 저장이 안됨.
+DT_table_frame.to_csv(title_DT_table) #value에 list 구조때문에 excel로는 저장이 안됨.
 
 #질환별 degree 조사
 for i, j in enumerate(DT_table.values()):
