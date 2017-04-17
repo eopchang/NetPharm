@@ -18,13 +18,16 @@ import pylab, copy
 ob_th = 30 #Oral bioavility(default = 30)
 dl_th = 0.18 #drug-likeness(default = 0.18)
 
-title_CT_index = 'CT_index_Manhyungza.xlsx'
-title_TD_index = 'TD_Manhyungza.xlsx'
-title_DT_table = 'DT_table_Manhyungza.xlsx'
-title_CT_degrees = 'CT_degrees.xlsx'
+title_CT_index = 'CT_index_ginseng.xlsx'
+title_TD_index = 'TD_ginseng.xlsx'
+title_DT_table = 'DT_table_ginseng' #주의: CSV 포맷으로 저장할거임
+title_CT_degrees_T = 'CT_degrees_T_ginseng.xlsx' #compound-target network의 target node degrees
+title_CT_degrees_M = 'CT_degrees_M_ginseng.xlsx' #compound-target network의 compound node degrees
+title_TD_degrees_T = 'TD_degrees_T_ginseng.xlsx' #target-disease network의 target node degrees
+title_TD_degrees_D = 'TD_degrees_D_ginseng.xlsx' #target-disease network의 disease node degrees
 
 #관심 처방의 본초 리스트
-Formulae_list = ['herb_ID_274']
+Formulae_list = ['herb_ID_336']
 
 H_name = pd.read_excel('02_Info_Herbs_Name.xlsx')
 M_info = pd.read_excel('03_Info_Molecules.xlsx')
@@ -33,6 +36,9 @@ D_info = pd.read_excel('05_Info_Diseases.xlsx')
 H_M = pd.read_excel('23_Herbs_Molecules_Relationships.xlsx')
 M_T = pd.read_excel('34_Molecules_Targets_Relationships.xlsx')   
 T_D = pd.read_excel('45_Targets_Diseases_Relationships.xlsx')
+
+T_info_toGene = pd.read_excel('04_Info_Targets_forMatching(curated).xlsx') #target name을 공식적인 gene name으로 변환위해 필요.
+
 
 
 #총 herb, compound 갯수 확인
@@ -128,21 +134,31 @@ CT_network = Formulae_merged
 # DataFrame 구조에서 ndarray구조 변환후 작업하고 다시 DataFrame으로 comeback(걍 그게 편해서)
 CT_degrees_items = CT_network.degree().items()
 CT_degrees_pd = pd.DataFrame(list(CT_degrees_items))
+CT_degrees_pd['type'] = 0
 CT_degrees_np = np.array(CT_degrees_pd)
 
 for i in CT_degrees_np[:,0]:
     if i[0] == 'M':
+        CT_degrees_np[CT_degrees_np[:,0]==i,2] = 'Compound'
         CT_degrees_np[CT_degrees_np[:,0]==i,0] = list(M_info[M_info.MOL_ID == i].molecule_name)
     else:
+        CT_degrees_np[CT_degrees_np[:,0]==i,2] = 'Target'
         CT_degrees_np[CT_degrees_np[:,0]==i,0] = list(T_info[T_info.TAR_ID == i].target_name)
 
-CT_degrees_pd = pd.DataFrame(CT_degrees_np, columns = ['Node', 'Degree'])
+CT_degrees_pd = pd.DataFrame(CT_degrees_np, columns = ['Node', 'Degree','Type'])
 
 #degree descending 순으로 배열
 CT_degrees_pd = CT_degrees_pd.sort_index(by = 'Degree', ascending=False)
 
 #CT_degree 정보 excel로 저장
-CT_degrees_pd.to_excel(title_CT_degrees)
+CT_degrees_T = CT_degrees_pd[CT_degrees_pd.Type =='Target']
+CT_degrees_T.to_excel(title_CT_degrees_T)
+
+CT_degrees_M = CT_degrees_pd[CT_degrees_pd.Type =='Compound']
+CT_degrees_M.to_excel(title_CT_degrees_M)
+
+
+
 
 ##T-D network construction & visualize
 #target 인수로 받아 해당 disease(list 구조) 출력하는 함수 정의.
@@ -168,6 +184,49 @@ for i in Targets:
     for j in disease(i):
              G.add_edge(i,j)
 TD_network = G
+
+
+
+
+#TD_network의 degree 정보 추출
+# DataFrame 구조에서 ndarray구조 변환후 작업하고 다시 DataFrame으로 comeback(걍 그게 편해서)
+TD_degrees_items = TD_network.degree().items()
+TD_degrees_pd = pd.DataFrame(list(TD_degrees_items))
+TD_degrees_pd['type'] = 0 
+TD_degrees_np = np.array(TD_degrees_pd)
+
+for i in TD_degrees_np[:,0]:
+    if i[0] == 'D':
+        TD_degrees_np[TD_degrees_np[:,0]==i,2] = 'Disease'
+        TD_degrees_np[TD_degrees_np[:,0]==i,0] = list(D_info[D_info.DIS_ID == i].disease_name)
+    else:
+        TD_degrees_np[TD_degrees_np[:,0]==i,2] = 'Target'
+        TD_degrees_np[TD_degrees_np[:,0]==i,0] = list(T_info[T_info.TAR_ID == i].target_name)
+
+TD_degrees_pd = pd.DataFrame(TD_degrees_np, columns = ['Node', 'Degree', 'Type'])
+
+#degree descending 순으로 배열
+TD_degrees_pd = TD_degrees_pd.sort_index(by = 'Degree', ascending=False)
+
+#CT_degree 정보 excel로 저장
+TD_degrees_T = TD_degrees_pd[TD_degrees_pd.Type =='Target']
+TD_degrees_T.to_excel(title_TD_degrees_T)
+
+TD_degrees_D = TD_degrees_pd[TD_degrees_pd.Type =='Disease']
+TD_degrees_D.to_excel(title_TD_degrees_D)
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 #node type에 따라 색깔 지정 list 생성
@@ -230,11 +289,36 @@ for i in TD_network_int.edges():
 DT_table_frame = pd.DataFrame(list(DT_table.items()))
 DT_table_frame.to_csv(title_DT_table) #value에 list 구조때문에 excel로는 저장이 안됨.
 
-#질환별 degree 조사
-for i, j in enumerate(DT_table.values()):
-    print(len(j), list(DT_table.keys())[i])
-    
-#TD_network_2: disease node 중에 degree > 1만 남김.     
-TD_network_2 = copy.deepcopy(TD_network) #다른 주소에 새로 할당하기 위해(list가 아니라 [:] 쓸수 없음.)
-TD_network_2.remove_nodes_from(dels for dels in TD_network_2.nodes() if dels[0] == 'D' and TD_network_2.degree(dels) <2)
-TD_network_2.remove_nodes_from(dels for dels in TD_network_2.nodes() if dels[0] == 'T' and TD_network_2.degree(dels)  < 1)
+
+
+CT_network.nodes()    
+list(T_info_toGene[T_info_toGene.TAR_ID == 'TAR00087'].gene_name)                 
+[list(T_info_toGene[T_info_toGene.TAR_ID == x].gene_name)[0] for x in T_info_toGene.TAR_ID]
+
+
+
+
+#이하 GSEA 분석. 작성중.
+
+import gseapy as gp
+
+glist = [str(list(T_info_toGene[T_info_toGene.TAR_ID == x].gene_name)[0]) for x in T_info_toGene.TAR_ID]
+#gene name이 int인 경우 있어 str로 변환.
+
+glist = [x.upper() for x in glist]
+#gseapy사용법 따라 대문자로 변환
+
+enrichr_results = gp.enrichr(gene_list=glist, description='test_name', gene_sets= 'Human_Phenotype_Ontology',
+                             outdir='enrichr_kegg', cutoff=0.5, scale=0.8, no_plot=True)
+
+results_sig = enrichr_results[enrichr_results.ix[:,3] < .05].Term
+print(results_sig.shape)                             
+
+
+#'GO_Molecular_Function_2015' 
+#'PPI_Hub_Proteins'
+#'OMIM_Disease'
+#'WikiPathways_2016'
+#'Human_Phenotype_Ontology'
+#'GO_Biological_Process_2015'
+
