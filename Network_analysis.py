@@ -27,7 +27,7 @@ title_TD_degrees_T = 'TD_degrees_T_ginseng.xlsx' #target-disease network의 targ
 title_TD_degrees_D = 'TD_degrees_D_ginseng.xlsx' #target-disease network의 disease node degrees
 
 #관심 처방의 본초 리스트
-Formulae_list = ['herb_ID_336']
+Formulae_list = [336]
 
 H_name = pd.read_excel('02_Info_Herbs_Name.xlsx')
 M_info = pd.read_excel('03_Info_Molecules.xlsx')
@@ -52,12 +52,9 @@ M_info = M_info[M_info.drug_likeness > dl_th]
 H_M = H_M[H_M.Mol_ID.isin(M_info.MOL_ID)]  #H_M에 NaN이 몇개 있음 -_-;; 확인 필요
 
 
-#중복 없는 herb 리스트
-herbs_unique = H_M.herb_ID.unique()
-
 #모든 본초를 key로, 각 본초의 networkx graph 객체(compound-target network)를 value로 갖는 dictionary
-All_herbs_CT = {} 
-for i in herbs_unique:
+herbs_CT = {} 
+for i in Formulae_list:
     mols = H_M.Mol_ID[H_M.herb_ID == i]
     G = nx.Graph()
     G.add_nodes_from(np.array(mols))
@@ -66,7 +63,7 @@ for i in herbs_unique:
          G.add_nodes_from(targets)
          for k in targets:
              G.add_edge(j,k)
-    All_herbs_CT['herb_ID_'+ str(i)] = G
+    herbs_CT[i] = G
     
 
     
@@ -74,9 +71,9 @@ for i in herbs_unique:
 ##C-T network construction & visualize## 
 #CT_network: graph 구조의 CT_netwowrk. 'node type'을 attribute로 갖음.
 #관심 처방의 본초별 그래프 merge
-CT_network = All_herbs_CT[Formulae_list[0]]
+CT_network = herbs_CT[Formulae_list[0]]
 for i in range(len(Formulae_list)):
-    CT_network = nx.compose(CT_network, All_herbs_CT[Formulae_list[i]])
+    CT_network = nx.compose(CT_network, herbs_CT[Formulae_list[i]])
     
 
 
