@@ -12,7 +12,7 @@ os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm')
 import numpy as np
 import pandas as pd
 import networkx as nx
-import pylab, copy
+import pylab
 
 #Compound filtering threshold 설정 
 ob_th = 30 #Oral bioavility(default = 30)
@@ -72,19 +72,19 @@ for i in herbs_unique:
     
 
 ##C-T network construction & visualize## 
-#Formulae_merged: graph 구조의 CT_netwowrk. 'node type'을 attribute로 갖음.
+#CT_network: graph 구조의 CT_netwowrk. 'node type'을 attribute로 갖음.
 #관심 처방의 본초별 그래프 merge
-Formulae_merged = All_herbs_CT[Formulae_list[0]]
+CT_network = All_herbs_CT[Formulae_list[0]]
 for i in range(len(Formulae_list)):
-    Formulae_merged = nx.compose(Formulae_merged, All_herbs_CT[Formulae_list[i]])
+    CT_network = nx.compose(CT_network, All_herbs_CT[Formulae_list[i]])
     
 
 
 
 #node type에 따라 색깔 지정 list 생성 & nodes type에 따라 node attribute 생성
-nodes = Formulae_merged.nodes() #for indexing
-nodes_color = Formulae_merged.nodes() #for color
-a = dict.fromkeys(Formulae_merged.nodes()) #for attribute
+nodes = CT_network.nodes() #for indexing
+nodes_color = CT_network.nodes() #for color
+a = dict.fromkeys(CT_network.nodes()) #for attribute
 
 for i in range(len(nodes)):
     if nodes[i][0] == 'M':
@@ -96,13 +96,13 @@ for i in range(len(nodes)):
         nodes_color[i] = 'c'
         
 #CT_network에 'node type'attribute 부여
-nx.set_node_attributes(Formulae_merged, 'node type', a)
+nx.set_node_attributes(CT_network, 'node type', a)
 
 ##visualize        
 pylab.figure()  
 
 #position of nodes  
-pos=nx.spring_layout(Formulae_merged)
+pos=nx.spring_layout(CT_network)
 
 #position of labels
 pos_labels = {}
@@ -110,11 +110,11 @@ y_off = .01 #상황에 맞게 조정
 for i, v in pos.items():
     pos_labels[i] = (v[0], v[1]+y_off)
     
-nx.draw_networkx(Formulae_merged, pos, with_labels=False, node_color = nodes_color)   
-nx.draw_networkx_labels(Formulae_merged, pos_labels)
+nx.draw_networkx(CT_network, pos, with_labels=False, node_color = nodes_color)   
+nx.draw_networkx_labels(CT_network, pos_labels)
 
 CT_nodes = []
-for i in Formulae_merged.nodes():
+for i in CT_network.nodes():
     if i[0] == 'T':
         ts = list(T_info[T_info['TAR_ID'] == i]['target_name'])
         CT_nodes.append(ts)
@@ -122,13 +122,9 @@ for i in Formulae_merged.nodes():
         ms = list(M_info[M_info['MOL_ID'] == i]['molecule_name'])
         CT_nodes.append(ms)
     
-CT_index = pd.DataFrame(Formulae_merged.nodes())
+CT_index = pd.DataFrame(CT_network.nodes())
 CT_index[1] = CT_nodes
 CT_index.to_excel(title_CT_index)
-
-
-
-CT_network = Formulae_merged
 
 #CT_network의 degree 정보 추출
 # DataFrame 구조에서 ndarray구조 변환후 작업하고 다시 DataFrame으로 comeback(걍 그게 편해서)
@@ -169,7 +165,7 @@ def disease(target):
     return result
     
 #관심처방의 해당 타겟들 추출
-Targets = Formulae_merged.nodes()
+Targets = CT_network.nodes()
 for i in Targets:
     if i[0] == 'M':
         Targets = [x for x in Targets if x != i] #remove로 지우면 같은 분자 2개 이상일 경우 첫번째만 지우므로
@@ -288,12 +284,6 @@ for i in TD_network_int.edges():
         
 DT_table_frame = pd.DataFrame(list(DT_table.items()))
 DT_table_frame.to_csv(title_DT_table) #value에 list 구조때문에 excel로는 저장이 안됨.
-
-
-
-CT_network.nodes()    
-list(T_info_toGene[T_info_toGene.TAR_ID == 'TAR00087'].gene_name)                 
-[list(T_info_toGene[T_info_toGene.TAR_ID == x].gene_name)[0] for x in T_info_toGene.TAR_ID]
 
 
 
