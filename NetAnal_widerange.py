@@ -192,6 +192,3 @@ result_T_nonzero_name = T_info.target_name[np.sum(result_T,1) >0]
 result_D_nonzero_name = D_info.disease_name[np.sum(result_D,1) >0]
 
 
-
-T_info.target_name[T_info.index == 3300]
-> T_info.index[np.sum(result_T,1) >0]
