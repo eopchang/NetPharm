@@ -289,17 +289,25 @@ DT_table_frame.to_csv(title_DT_table) #value에 list 구조때문에 excel로는
 
 import gseapy as gp
 
-glist = [str(list(T_info_toGene[T_info_toGene.TAR_ID == x].gene_name)[0]) for x in T_info_toGene.TAR_ID]
+a = nx.get_node_attributes(CT_network, 'node type')
+Tar_list = [x for x in a if a[x] == 'Tar']
+
+
+
+glist = [str(list(T_info_toGene[T_info_toGene.TAR_ID == x].gene_name)[0]) for x in Tar_list]
 #gene name이 int인 경우 있어 str로 변환.
 
 glist = [x.upper() for x in glist]
 #gseapy사용법 따라 대문자로 변환
 
-enrichr_results = gp.enrichr(gene_list=glist, description='test_name', gene_sets= 'Human_Phenotype_Ontology',
-                             outdir='enrichr_kegg', cutoff=0.5, scale=0.8, no_plot=True)
+enrichr_results = gp.enrichr(gene_list=glist, gene_sets= 'Human_Phenotype_Ontology'
+                            , cutoff=0.5, scale=0.8, no_plot=True)
 
-results_sig = enrichr_results[enrichr_results.ix[:,3] < .05].Term
-print(results_sig.shape)                             
+results_sig = enrichr_results[np.sort(enrichr_results.ix[:,3]) < .05].Term
+results_sig = pd.DataFrame(results_sig)
+print(results_sig)          
+results_sig.to_excel('GSEA_test_0424.xlsx')
+                   
 
 
 #'GO_Molecular_Function_2015' 
@@ -308,4 +316,5 @@ print(results_sig.shape)
 #'WikiPathways_2016'
 #'Human_Phenotype_Ontology'
 #'GO_Biological_Process_2015'
+#'KEGG_2016'
 
