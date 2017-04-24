@@ -31,7 +31,8 @@ T_D = pd.read_excel('45_Targets_Diseases_Relationships.xlsx')
 
 T_info_toGene = pd.read_excel('04_Info_Targets_forMatching(curated).xlsx') #target name을 공식적인 gene name으로 변환위해 필요.
 
-n = 10 #threshold bin size       
+n = 10 #threshold bin size     
+d_th = 2#전체 threshold range 에서 평균 d_th 초과의 degree인 타겟, 질환만 결과로.
 
 N_Tar = T_info.shape[0] 
 N_Dis = D_info.shape[0]   
@@ -185,10 +186,21 @@ for t in range(n):
         result_D[position,t] = np.array(TD_degrees_D)[i,1] #D_info.disease_name 순서
         
     
-result_T_nonzero = result_T[np.sum(result_T,1) >0,:]
-result_D_nonzero = result_D[np.sum(result_D,1) >0,:]
+result_T_nonzero = result_T[np.sum(result_T,1) > d_th*n,:]
+result_D_nonzero = result_D[np.sum(result_D,1) > d_th*n,:]
 
-result_T_nonzero_name = T_info.target_name[np.sum(result_T,1) >0]
-result_D_nonzero_name = D_info.disease_name[np.sum(result_D,1) >0]
+result_T_nonzero_name = T_info.target_name[np.sum(result_T,1) > d_th*n]
+result_D_nonzero_name = D_info.disease_name[np.sum(result_D,1) > d_th*n]
+
+plt.figure()
+plt.title('Targets')
+plt.imshow(result_T_nonzero)
+plt.yticks(range(result_T_nonzero_name.size),result_T_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
 
 
+plt.figure()
+plt.title('Diseases')
+plt.imshow(result_D_nonzero)
+plt.yticks(range(result_D_nonzero_name.size),result_D_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
