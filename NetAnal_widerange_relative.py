@@ -47,8 +47,8 @@ N_Herb = H_name.shape[0]
 N_Tar = T_info.shape[0] 
 N_Dis = D_info.shape[0] 
            
-result_T = np.zeros((N_Tar, n, N_Herb))
-result_D = np.zeros((N_Dis, n, N_Herb))   
+result_T_all = np.zeros((N_Tar, n, N_Herb))
+result_D_all = np.zeros((N_Dis, n, N_Herb))   
 
 for H_i in range(N_Herb): #[335]:#
     H = H_i+1#herb_ID는 index+1임. H_i: index, H:herb_ID
@@ -111,7 +111,7 @@ for H_i in range(N_Herb): #[335]:#
         #reuslt_Tmatrix에 degree 값 채워넣기.
         for i,j in enumerate(CT_degrees_T.Node):
             position = T_info.index[T_info.target_name == j][0]
-            result_T[position,t, H_i] = np.array(CT_degrees_T)[i,1] #T_info.target_name 순서
+            result_T_all[position,t, H_i] = np.array(CT_degrees_T)[i,1] #T_info.target_name 순서
             
             
     
@@ -177,34 +177,118 @@ for H_i in range(N_Herb): #[335]:#
         #reuslt_D matrix에 degree 값 채워넣기.
         for i,j in enumerate(TD_degrees_D.Node):
             position = D_info.index[D_info.disease_name == j][0]
-            result_D[position,t, H_i] = np.array(TD_degrees_D)[i,1] #D_info.disease_name 순서
+            result_D_all[position,t, H_i] = np.array(TD_degrees_D)[i,1] #D_info.disease_name 순서
             
         
 t2 = time.time()
 
 print(t2-t1)
 
-np.save('result_T',result_T)
-np.save('result_D',result_D)
-#result_T_nonzero = result_T[np.sum(result_T[:,:,H_i],1) > d_th*n,:]
-#result_D_nonzero = result_D[np.sum(result_D[:,:,H_i],1) > d_th*n,:]
-
-#result_T_nonzero_name = T_info.target_name[np.sum(result_T[:,:,H_i],1) > d_th*n]
-#result_D_nonzero_name = D_info.disease_name[np.sum(result_D[:,:,H_i],1) > d_th*n]
-
-#plt.figure()
-#plt.title('Targets')
-
-#result_T_nonzero = result_T_nonzero[:,:,H_i]
-#plt.imshow(result_T_nonzero)
-#plt.yticks(range(result_T_nonzero_name.size),result_T_nonzero_name, Fontsize = 4)
-#plt.xticks(range(n), range(n), Fontsize=4)
+np.save('result_T_all',result_T_all)
+np.save('result_D_all',result_D_all)
 
 
-#plt.figure()
-#plt.title('Diseases')
+#여기끼지가 일회성 분석###
+#######################################################
 
-#result_D_nonzero = result_D_nonzero[:,:,H_i]
-#plt.imshow(result_D_nonzero)
-#plt.yticks(range(result_D_nonzero_name.size),result_D_nonzero_name, Fontsize = 4)
-#plt.xticks(range(n), range(n), Fontsize=4)
+
+#전체 본초들의 평균 결과
+result_T_mean = np.mean(result_T_all, axis = 2)
+result_D_mean = np.mean(result_D_all, axis = 2)
+
+result_T_nonzero_mean = result_T_mean[np.sum(result_T_mean,1) > d_th*n,:]
+result_D_nonzero_mean = result_D_mean[np.sum(result_D_mean,1) > d_th*n,:]
+
+result_T_nonzero_name = T_info.target_name[np.sum(result_T_mean,1) > d_th*n]
+result_D_nonzero_name = D_info.disease_name[np.sum(result_D_mean,1) > d_th*n]
+
+plt.figure()
+plt.title('Targets\n' +"Mean of " + str(N_Herb) + " Herbs")
+plt.imshow(result_T_nonzero_mean)
+plt.yticks(range(result_T_nonzero_name.size),result_T_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
+
+
+
+plt.figure()
+plt.title('Diseases\n'+"Mean of " + str(N_Herb) + " Herbs")
+plt.imshow(result_D_nonzero_mean)
+plt.yticks(range(result_D_nonzero_name.size),result_D_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
+
+
+
+
+
+
+
+#######개별 본초들 확인
+x = Herb[0] -1 #관심 본초. 
+
+result_T = result_T_all[:,:,x]
+result_D = result_D_all[:,:,x]
+    
+result_T_nonzero = result_T[np.sum(result_T,1) > d_th*n,:]
+result_D_nonzero = result_D[np.sum(result_D,1) > d_th*n,:]
+
+result_T_nonzero_name = T_info.target_name[np.sum(result_T,1) > d_th*n]
+result_D_nonzero_name = D_info.disease_name[np.sum(result_D,1) > d_th*n]
+
+plt.figure()
+plt.title('Targets')
+plt.imshow(result_T_nonzero)
+plt.yticks(range(result_T_nonzero_name.size),result_T_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
+
+
+plt.figure()
+plt.title('Diseases')
+plt.imshow(result_D_nonzero)
+plt.yticks(range(result_D_nonzero_name.size),result_D_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
+
+
+
+###########본초별로 오름차순 정리하고 관심본초당 각 행, 열에서의 비율 계산.
+result_T_all_sorted = np.sort(result_T_all, axis = 2)
+result_D_all_sorted = np.sort(result_D_all, axis = 2)
+
+#먼저 본초별 각 행,열에서의 순위 역순 계산
+result_T_rel = np.zeros(result_T.shape)
+for i in range(result_T.shape[0]):
+    for j in range(result_T.shape[1]):
+        result_T_rel[i,j] = np.where(result_T_all_sorted[i,j] == result_T[i,j])[0][0]#동점시에 가장 작은 값
+
+result_D_rel = np.zeros(result_D.shape)
+for i in range(result_D.shape[0]):
+    for j in range(result_D.shape[1]):
+        result_D_rel[i,j] = np.where(result_D_all_sorted[i,j] == result_D[i,j])[0][0]#동점시에 가장 작은 값
+
+#순위 역순을 전체 본초 갯수로 나눠서 0-1 사이의 비율로 변환        
+result_T_rel = result_T_rel/(np.ones(np.shape(result_T_rel))*N_Herb)
+result_D_rel = result_D_rel/(np.ones(np.shape(result_D_rel))*N_Herb)
+
+
+
+####################################
+
+R = .7 #관심 본초가 타 본초 대비 상위 어느정도일때(0-1) visualize할것인지. 
+
+result_T_rel_nonzero = result_T_rel[np.sum(result_T_rel,1) > R*n,:]
+result_D_rel_nonzero = result_D_rel[np.sum(result_D_rel,1) > R*n,:]
+
+result_T_nonzero_name = T_info.target_name[np.sum(result_T_rel,1) >R*n]
+result_D_nonzero_name = D_info.disease_name[np.sum(result_D_rel,1) >R*n]
+
+plt.figure()
+plt.title('Targets\n'+ 'Relative Score')
+plt.imshow(result_T_rel_nonzero)
+plt.yticks(range(result_T_nonzero_name.size),result_T_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
+
+
+plt.figure()
+plt.title('Diseases\n'+'Relative Score')
+plt.imshow(result_D_rel_nonzero)
+plt.yticks(range(result_D_nonzero_name.size),result_D_nonzero_name, Fontsize = 4)
+plt.xticks(range(n), range(n), Fontsize=4)
