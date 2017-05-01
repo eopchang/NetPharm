@@ -5,11 +5,9 @@
 """
 Created on Sun Mar 26 20:28:22 2017
 
-@author: Chang-Eop
+@author: Neural Network & Sysyems Medicine Lab 
 """
-
-import os
-os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetAnal')
+    
 
 
 import pandas as pd
