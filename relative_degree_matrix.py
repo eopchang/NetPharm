@@ -6,7 +6,8 @@ Created on Mon May  1 20:19:22 2017
 @author: Chang-Eop
 
 WideRange_all_herbs.py로 생성된 result_T_all.npy,
- result_D_all.npy 파일이 폴더내에 존재해야 함
+ result_D_all.npy 파일이 폴더내에 존재해야 함.
+figure fontsize는 적절히 조절해 사용할 것.
 """
 import os
 os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm')
@@ -18,8 +19,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-#관심 본초
+#관심 본초 herb_ID
 Herb = [336]
+
+#관심 본초가 타 본초 대비 상위 어느정도일때(0-1) visualize할것인지. (0.7=상위 30%)
+R = 0.7
 
 
 
@@ -114,10 +118,9 @@ result_T_rel = result_T_rel/(np.ones(np.shape(result_T_rel))*N_Herb)
 result_D_rel = result_D_rel/(np.ones(np.shape(result_D_rel))*N_Herb)
 
 
-
 ####################################
 
-R = .7 #관심 본초가 타 본초 대비 상위 어느정도일때(0-1) visualize할것인지. 
+
 
 result_T_rel_nonzero = result_T_rel[np.sum(result_T_rel,1) > R*n,:]
 result_D_rel_nonzero = result_D_rel[np.sum(result_D_rel,1) > R*n,:]
@@ -135,5 +138,5 @@ plt.xticks(range(n), range(n), Fontsize=4)
 plt.figure()
 plt.title('Diseases\n'+'Relative Score')
 plt.imshow(result_D_rel_nonzero)
-plt.yticks(range(result_D_nonzero_name.size),result_D_nonzero_name, Fontsize = 10)
-plt.xticks(range(n), range(n), Fontsize=10)
+plt.yticks(range(result_D_nonzero_name.size),result_D_nonzero_name, Fontsize = 6)
+plt.xticks(range(n), range(n), Fontsize=6)
