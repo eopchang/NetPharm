@@ -4,8 +4,10 @@ Created on Wed Jan 18 17:04:01 2017
 
 @author: Chang-Eop
 """
+#HC_network 그래프 객체는 HC_network
 #CT_network 그래프 객체는 CT_network
 #TD_network 그래프 객체는 TD_network
+
 import os
 os.chdir('/Users/Chang-Eop/Desktop/GitHub/NetPharm')
 
@@ -51,7 +53,17 @@ M_info = M_info[M_info.drug_likeness > dl_th]
 #herbe-molecule 목록에서 ADME 필터링 한 moldecule만 남기기
 H_M = H_M[H_M.Mol_ID.isin(M_info.MOL_ID)]  #H_M에 NaN이 몇개 있음 -_-;; 확인 필요
 
+          
+ 
+#HC network construction (herb-compound network)  
+H_M.index = range(len(H_M)) #filtering에 따른 index 변화 재정리         
+HC_network = nx.Graph()
+for i in H_M.index:
+    HC_network.add_edge(H_M.ix[i,0], H_M.ix[i,1])
+    
+    
 
+          
 #모든 본초를 key로, 각 본초의 networkx graph 객체(compound-target network)를 value로 갖는 dictionary
 herbs_CT = {} 
 for i in Formulae_list:
