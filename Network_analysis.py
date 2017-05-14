@@ -42,6 +42,22 @@ T_D = pd.read_excel('45_Targets_Diseases_Relationships.xlsx')
 T_info_toGene = pd.read_excel('04_Info_Targets_forMatching(curated).xlsx') #target name을 공식적인 gene name으로 변환위해 필요.
 
 
+#compound 인수로 받아 해당 targets(list 구조) 출력하는 함수 정의.
+def target(mol):
+    m_ID = M_T['MOL_ID']
+    t_ID = M_T['TARGET_ID']
+    result = np.array(t_ID[m_ID == mol])
+    return result
+                         
+                         
+#target 인수로 받아 해당 disease(list 구조) 출력하는 함수 정의.                        
+def disease(target):
+    t_ID = T_D['target_ID']
+    d_ID = T_D['disease_ID']
+    result = np.array(d_ID[t_ID == target])
+    return result
+
+
 
 #총 herb, compound 갯수 확인
 print(H_M.herb_ID.unique().size, H_M.Mol_ID.unique().size)
@@ -53,15 +69,13 @@ M_info = M_info[M_info.drug_likeness > dl_th]
 #herbe-molecule 목록에서 ADME 필터링 한 moldecule만 남기기
 H_M = H_M[H_M.Mol_ID.isin(M_info.MOL_ID)]  #H_M에 NaN이 몇개 있음 -_-;; 확인 필요
 
-          
- 
+    
 #HC network construction (herb-compound network)  
 H_M.index = range(len(H_M)) #filtering에 따른 index 변화 재정리         
 HC_network = nx.Graph()
-for i in H_M.index:
+
+for i in H_M.index[H_M.ix[:,0] == Formulae_list]:
     HC_network.add_edge(H_M.ix[i,0], H_M.ix[i,1])
-    
-    
 
           
 #모든 본초를 key로, 각 본초의 networkx graph 객체(compound-target network)를 value로 갖는 dictionary
@@ -166,13 +180,7 @@ CT_degrees_M.to_excel(title_CT_degrees_M)
 
 
 ##T-D network construction & visualize
-#target 인수로 받아 해당 disease(list 구조) 출력하는 함수 정의.
-def disease(target):
-    t_ID = T_D['target_ID']
-    d_ID = T_D['disease_ID']
-    result = np.array(d_ID[t_ID == target])
-    return result
-    
+
 #관심처방의 해당 타겟들 추출
 Targets = CT_network.nodes()
 for i in Targets:
