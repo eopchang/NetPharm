@@ -304,7 +304,11 @@ for i in TD_network_int.edges():
 DT_table_frame = pd.DataFrame(list(DT_table.items()))
 DT_table_frame.to_csv(title_DT_table) #value에 list 구조때문에 excel로는 저장이 안됨.
 
-
+                     
+                     
+nx.write_gexf(HC_network, 'Graph_HC_test')
+nx.write_gexf(CT_network, 'Graph_CT_test')
+nx.write_gexf(TD_network, 'Graph_TD_test')
 
 
 #이하 GSEA 분석. 작성중.
