@@ -74,11 +74,13 @@ H_M = H_M[H_M.Mol_ID.isin(M_info.MOL_ID)]  #H_M에 NaN이 몇개 있음 -_-;; �
 H_M.index = range(len(H_M)) #filtering에 따른 index 변화 재정리         
 HC_network = nx.Graph()
 
-for i in H_M.index[H_M.ix[:,0] == Formulae_list]:
-    HC_network.add_edge(H_M.ix[i,0], H_M.ix[i,1])
+
+for i in Formulae_list:
+    for j in H_M.index[H_M.ix[:,0] == i]:
+        HC_network.add_edge(H_M.ix[j,0], H_M.ix[j,1])
 
           
-#모든 본초를 key로, 각 본초의 networkx graph 객체(compound-target network)를 value로 갖는 dictionary
+#처방의 본초를 key로, 각 본초의 networkx graph 객체(compound-target network)를 value로 갖는 dictionary
 herbs_CT = {} 
 for i in Formulae_list:
     mols = H_M.Mol_ID[H_M.herb_ID == i]
@@ -326,7 +328,7 @@ enrichr_results = gp.enrichr(gene_list=glist, gene_sets= 'Human_Phenotype_Ontolo
 results_sig = enrichr_results[np.sort(enrichr_results.ix[:,3]) < .05].Term
 results_sig = pd.DataFrame(results_sig)
 print(results_sig)          
-results_sig.to_excel('GSEA_test_0424.xlsx')
+results_sig.to_excel('GSEA_Human_Phenotype_Ontology_Chrysosplenetin.xlsx')
                    
 
 

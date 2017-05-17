@@ -1,0 +1,74 @@
+LINE 44  : 2017-05-14 19:42:10,476 [INFO    ] Connecting to Enrichr Server to get latest library names
+LINE 54  : 2017-05-14 19:42:10,476 [INFO    ] Analysis name: foo, Enrichr Library: KEGG_2016
+LINE 212 : 2017-05-14 19:42:11,045 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:42:13,055 [DEBUG   ] http://amp.pharm.mssm.edu:80 "POST /Enrichr/addList HTTP/1.1" 200 46
+LINE 69  : 2017-05-14 19:42:13,057 [DEBUG   ] Job ID:{'shortId': '1erv8', 'userListId': 3223861}
+LINE 212 : 2017-05-14 19:42:13,060 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:42:13,692 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/view?userListId=3223861 HTTP/1.1" 200 216
+LINE 77  : 2017-05-14 19:42:13,694 [INFO    ] Submitted gene list:{'shortId': '1erv8', 'userListId': 3223861}
+LINE 212 : 2017-05-14 19:42:13,696 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:42:14,593 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/enrich?userListId=3223861&backgroundType=KEGG_2016 HTTP/1.1" 200 None
+LINE 89  : 2017-05-14 19:42:14,865 [DEBUG   ] Get enrichment results: Job Id:{'shortId': '1erv8', 'userListId': 3223861}
+LINE 212 : 2017-05-14 19:42:14,869 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:42:15,793 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/export?userListId=3223861&filename=Enrichr.reports.&backgroundType=KEGG_2016 HTTP/1.1" 200 None
+LINE 98  : 2017-05-14 19:42:15,793 [INFO    ] Downloading file of enrichment results: Job Id:{'shortId': '1erv8', 'userListId': 3223861}
+LINE 104 : 2017-05-14 19:42:16,103 [DEBUG   ] Results written to: Enrichr.reports.foo.txt
+LINE 114 : 2017-05-14 19:42:16,111 [INFO    ] Enrichr: You are inside python console, a dataframe is returned.
+LINE 115 : 2017-05-14 19:42:16,111 [INFO    ] Enrichr: Job Done!
+LINE 44  : 2017-05-14 19:43:54,401 [INFO    ] Connecting to Enrichr Server to get latest library names
+LINE 54  : 2017-05-14 19:43:54,401 [INFO    ] Analysis name: foo, Enrichr Library: GO_Biological_Process_2015
+LINE 212 : 2017-05-14 19:43:54,404 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:43:55,053 [DEBUG   ] http://amp.pharm.mssm.edu:80 "POST /Enrichr/addList HTTP/1.1" 200 46
+LINE 69  : 2017-05-14 19:43:55,054 [DEBUG   ] Job ID:{'shortId': '1erv9', 'userListId': 3223862}
+LINE 212 : 2017-05-14 19:43:55,058 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:43:55,699 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/view?userListId=3223862 HTTP/1.1" 200 216
+LINE 77  : 2017-05-14 19:43:55,700 [INFO    ] Submitted gene list:{'shortId': '1erv9', 'userListId': 3223862}
+LINE 212 : 2017-05-14 19:43:55,704 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:43:59,442 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/enrich?userListId=3223862&backgroundType=GO_Biological_Process_2015 HTTP/1.1" 200 None
+LINE 89  : 2017-05-14 19:44:00,899 [DEBUG   ] Get enrichment results: Job Id:{'shortId': '1erv9', 'userListId': 3223862}
+LINE 212 : 2017-05-14 19:44:00,902 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:44:04,714 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/export?userListId=3223862&filename=Enrichr.reports.&backgroundType=GO_Biological_Process_2015 HTTP/1.1" 200 None
+LINE 98  : 2017-05-14 19:44:04,716 [INFO    ] Downloading file of enrichment results: Job Id:{'shortId': '1erv9', 'userListId': 3223862}
+LINE 104 : 2017-05-14 19:44:06,943 [DEBUG   ] Results written to: Enrichr.reports.foo.txt
+LINE 114 : 2017-05-14 19:44:06,954 [INFO    ] Enrichr: You are inside python console, a dataframe is returned.
+LINE 115 : 2017-05-14 19:44:06,954 [INFO    ] Enrichr: Job Done!
+LINE 44  : 2017-05-14 19:44:48,189 [INFO    ] Connecting to Enrichr Server to get latest library names
+LINE 54  : 2017-05-14 19:44:48,190 [INFO    ] Analysis name: foo, Enrichr Library: Human_Phenotype_Ontology
+LINE 212 : 2017-05-14 19:44:48,198 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:44:48,724 [DEBUG   ] http://amp.pharm.mssm.edu:80 "POST /Enrichr/addList HTTP/1.1" 200 46
+LINE 69  : 2017-05-14 19:44:48,727 [DEBUG   ] Job ID:{'shortId': '1erva', 'userListId': 3223863}
+LINE 212 : 2017-05-14 19:44:48,734 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 44  : 2017-05-14 19:45:39,539 [INFO    ] Connecting to Enrichr Server to get latest library names
+LINE 54  : 2017-05-14 19:45:39,540 [INFO    ] Analysis name: foo, Enrichr Library: GO_Molecular_Function_2015
+LINE 212 : 2017-05-14 19:45:39,544 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:45:40,118 [DEBUG   ] http://amp.pharm.mssm.edu:80 "POST /Enrichr/addList HTTP/1.1" 200 46
+LINE 69  : 2017-05-14 19:45:40,119 [DEBUG   ] Job ID:{'shortId': '1ervb', 'userListId': 3223864}
+LINE 212 : 2017-05-14 19:45:40,123 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:45:40,729 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/view?userListId=3223864 HTTP/1.1" 200 216
+LINE 77  : 2017-05-14 19:45:40,731 [INFO    ] Submitted gene list:{'shortId': '1ervb', 'userListId': 3223864}
+LINE 212 : 2017-05-14 19:45:40,734 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:45:41,843 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/enrich?userListId=3223864&backgroundType=GO_Molecular_Function_2015 HTTP/1.1" 200 None
+LINE 89  : 2017-05-14 19:45:42,113 [DEBUG   ] Get enrichment results: Job Id:{'shortId': '1ervb', 'userListId': 3223864}
+LINE 212 : 2017-05-14 19:45:42,116 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:45:43,311 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/export?userListId=3223864&filename=Enrichr.reports.&backgroundType=GO_Molecular_Function_2015 HTTP/1.1" 200 None
+LINE 98  : 2017-05-14 19:45:43,312 [INFO    ] Downloading file of enrichment results: Job Id:{'shortId': '1ervb', 'userListId': 3223864}
+LINE 104 : 2017-05-14 19:45:43,862 [DEBUG   ] Results written to: Enrichr.reports.foo.txt
+LINE 114 : 2017-05-14 19:45:43,866 [INFO    ] Enrichr: You are inside python console, a dataframe is returned.
+LINE 115 : 2017-05-14 19:45:43,866 [INFO    ] Enrichr: Job Done!
+LINE 44  : 2017-05-14 19:46:49,524 [INFO    ] Connecting to Enrichr Server to get latest library names
+LINE 54  : 2017-05-14 19:46:49,524 [INFO    ] Analysis name: foo, Enrichr Library: Human_Phenotype_Ontology
+LINE 212 : 2017-05-14 19:46:49,531 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:46:50,115 [DEBUG   ] http://amp.pharm.mssm.edu:80 "POST /Enrichr/addList HTTP/1.1" 200 46
+LINE 69  : 2017-05-14 19:46:50,116 [DEBUG   ] Job ID:{'shortId': '1ervc', 'userListId': 3223865}
+LINE 212 : 2017-05-14 19:46:50,123 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:46:50,730 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/view?userListId=3223865 HTTP/1.1" 200 216
+LINE 77  : 2017-05-14 19:46:50,732 [INFO    ] Submitted gene list:{'shortId': '1ervc', 'userListId': 3223865}
+LINE 212 : 2017-05-14 19:46:50,736 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:46:51,700 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/enrich?userListId=3223865&backgroundType=Human_Phenotype_Ontology HTTP/1.1" 200 None
+LINE 89  : 2017-05-14 19:46:52,031 [DEBUG   ] Get enrichment results: Job Id:{'shortId': '1ervc', 'userListId': 3223865}
+LINE 212 : 2017-05-14 19:46:52,034 [DEBUG   ] Starting new HTTP connection (1): amp.pharm.mssm.edu
+LINE 400 : 2017-05-14 19:46:52,954 [DEBUG   ] http://amp.pharm.mssm.edu:80 "GET /Enrichr/export?userListId=3223865&filename=Enrichr.reports.&backgroundType=Human_Phenotype_Ontology HTTP/1.1" 200 None
+LINE 98  : 2017-05-14 19:46:52,955 [INFO    ] Downloading file of enrichment results: Job Id:{'shortId': '1ervc', 'userListId': 3223865}
+LINE 104 : 2017-05-14 19:46:53,232 [DEBUG   ] Results written to: Enrichr.reports.foo.txt
+LINE 114 : 2017-05-14 19:46:53,235 [INFO    ] Enrichr: You are inside python console, a dataframe is returned.
+LINE 115 : 2017-05-14 19:46:53,235 [INFO    ] Enrichr: Job Done!
